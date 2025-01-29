@@ -102,7 +102,7 @@ data1[data1.duplicated()]
 data1[data1.duplicated(keep = False)]
 
 
-# In[22]:
+# In[15]:
 
 
 data1.rename({'solar': 'solar'}, axis=1, inplace = True)
@@ -123,7 +123,7 @@ colours = ['black', 'yellow']
 sns.heatmap(data1[cols].isnull(),cmap=sns.color_palette(colours),cbar = True)
 
 
-# In[25]:
+# In[18]:
 
 
 median_ozone = data1["Ozone"].median()
@@ -132,14 +132,14 @@ print("Median of Ozone: ", median_ozone)
 print("Mean of Ozone: ", mean_ozone)
 
 
-# In[26]:
+# In[19]:
 
 
 data1['Ozone'] = data1['Ozone'].fillna(median_ozone)
 data1.isnull().sum()
 
 
-# In[34]:
+# In[20]:
 
 
 median_Solar = data1["Solar"].median()
@@ -148,14 +148,14 @@ print("Median of Solar: ", median_Solar)
 print("Mean of Ozone: ", mean_Solar)
 
 
-# In[33]:
+# In[ ]:
 
 
 data1['Solar.R'] = data1['Solar.R'].fillna(median_Solar.R)
 data1.isnull().sum()
 
 
-# In[23]:
+# In[ ]:
 
 
 print(data1["Weather"].value_counts())
@@ -163,33 +163,33 @@ mode_weather = data1["Weather"].mode()[0]
 print(mode_weather)
 
 
-# In[31]:
+# In[ ]:
 
 
 data1["Weather"] = data1["Weather"].fillna(mode_weather)
 data1.isnull().sum()
 
 
-# In[32]:
+# In[ ]:
 
 
 data1["Month"] = data1["Month"].fillna(mode_weather)
 data1.isnull().sum()
 
 
-# In[35]:
+# In[ ]:
 
 
 data1.tail()
 
 
-# In[36]:
+# In[ ]:
 
 
 data1.reset_index(drop=True)
 
 
-# In[39]:
+# In[ ]:
 
 
 #Create a figure with two subplots ,stacked vertically
@@ -218,7 +218,7 @@ plt.show()
 # .the ozone colun has extreme values beyond 81 as seen from box plot
 # .the same is confirmed from the below right-skewed histogram
 
-# In[40]:
+# In[ ]:
 
 
 #Create a figure with two subplots ,stacked vertically
@@ -240,6 +240,95 @@ plt.tight_layout()
 #Show the plot
 plt.show()
 
+
+# In[22]:
+
+
+plt.figure(figsize=(6,2))
+plt.boxplot(data1["Ozone"], vert=False)
+
+
+# In[23]:
+
+
+plt.figure(figsize=(6,2))
+boxplot_data = plt.boxplot(data1["Ozone"], vert=False)
+[item.get_xdata() for item in boxplot_data['fliers']]
+
+
+# In[24]:
+
+
+# Method 2 for outlier detection
+data1["Ozone"].describe()
+
+
+# In[25]:
+
+
+mu = data1["Ozone"].describe()[1]
+sigma = data1["Ozone"].describe()[2]
+for x in data1["Ozone"]:
+    if ((x < (mu -3*sigma)) or (x > (mu + 3*sigma))): 
+        print(x)
+
+
+# In[26]:
+
+
+import scipy.stats as stats
+plt.figure(figsize=(8, 6))
+stats.probplot(data1["Ozone"], dist="norm", plot=plt)
+plt.title("Q-Q plot for Outlier Detection", fontsize=14)
+plt.xlabel("Theoretical Quantiles", fontsize=12)
+
+
+# In[27]:
+
+
+sns.violinplot(data=data1["Ozone"], color='lightgreen')
+plt.title("Violin Plot")
+plt.show()
+
+
+# In[31]:
+
+
+sns.swarmplot(data=data1, x = "Weather", y = "Ozone",color="orange",palette="Set2", size=6)
+
+
+# In[38]:
+
+
+sns.stripplot(data=data1, x = "Weather", y = "Ozone",color="orange",palette="Set1", size=6, jitter = True)
+
+
+# In[37]:
+
+
+sns.kdeplot(data=data1["Ozone"], fill=True, color="blue")
+sns.rugplot(data=data1["Ozone"], color="black")
+
+
+# In[39]:
+
+
+sns.boxplot(data = data1, x = "Weather", y="Ozone")
+
+
+# In[40]:
+
+
+plt.scatter(data1["Wind"], data1["Temp"])
+
+
+# In[43]:
+
+
+data1["Wind"].corr(data1["Temp"])
+
+
+# we can observe the data it have mild negative correlation between two variables
 
 # In[ ]:
 
