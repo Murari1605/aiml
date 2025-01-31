@@ -218,7 +218,7 @@ plt.show()
 # .the ozone colun has extreme values beyond 81 as seen from box plot
 # .the same is confirmed from the below right-skewed histogram
 
-# In[ ]:
+# In[22]:
 
 
 #Create a figure with two subplots ,stacked vertically
@@ -241,14 +241,14 @@ plt.tight_layout()
 plt.show()
 
 
-# In[21]:
+# In[23]:
 
 
 plt.figure(figsize=(6,2))
 plt.boxplot(data1["Ozone"], vert=False)
 
 
-# In[22]:
+# In[24]:
 
 
 plt.figure(figsize=(6,2))
@@ -256,14 +256,14 @@ boxplot_data = plt.boxplot(data1["Ozone"], vert=False)
 [item.get_xdata() for item in boxplot_data['fliers']]
 
 
-# In[23]:
+# In[25]:
 
 
 # Method 2 for outlier detection
 data1["Ozone"].describe()
 
 
-# In[32]:
+# In[26]:
 
 
 mu = data1["Ozone"].describe()[1]
@@ -273,7 +273,7 @@ for x in data1["Ozone"]:
         print(x)
 
 
-# In[29]:
+# In[27]:
 
 
 import scipy.stats as stats
@@ -281,4 +281,130 @@ plt.figure(figsize=(8, 6))
 stats.probplot(data1["Ozone"], dist="norm", plot=plt)
 plt.title("Q-Q plot for Outlier Detection", fontsize=14)
 plt.xlabel("Theoretical Quantiles", fontsize=12)
+
+
+# In[28]:
+
+
+sns.violinplot(data=data1["Ozone"], color='lightgreen')
+plt.title("Violin Plot")
+plt.show()
+
+
+# In[29]:
+
+
+sns.swarmplot(data=data1, x = "Weather", y = "Ozone",color="orange",palette="Set2", size=6)
+
+
+# In[30]:
+
+
+sns.stripplot(data=data1, x = "Weather", y = "Ozone",color="orange",palette="Set1", size=6, jitter = True)
+
+
+# In[31]:
+
+
+sns.kdeplot(data=data1["Ozone"], fill=True, color="blue")
+sns.rugplot(data=data1["Ozone"], color="black")
+
+
+# In[32]:
+
+
+sns.boxplot(data = data1, x = "Weather", y="Ozone")
+
+
+# In[33]:
+
+
+plt.scatter(data1["Wind"], data1["Temp"])
+
+
+# In[34]:
+
+
+data1["Wind"].corr(data1["Temp"])
+
+
+# we can observe the data it have mild negative correlation between two variables
+
+# In[35]:
+
+
+data1.info()
+
+
+# In[36]:
+
+
+data1_numeric = data1.iloc[:,[0,1,2,6]]
+data1_numeric
+
+
+# In[37]:
+
+
+data1_numeric.corr()
+
+
+# The highest correlation strength is observed between ozone and temp(0.5970870).
+# The next higher correlation strength is observed between ozone and wind(-0.523738).
+# The next higher correlation strength is observed between wind and temp(-0.441228).
+# The least correlation strength is observed between solar and wind(-0.056594).
+
+# In[38]:
+
+
+sns.pairplot(data1_numeric)
+
+
+# In[39]:
+
+
+data2=pd.get_dummies(data1,columns=['Month','Weather'])
+data2
+
+
+# In[40]:
+
+
+#Normalization of the data
+data1_numeric.values
+
+
+# In[43]:
+
+
+from numpy import set_printoptions
+from sklearn.preprocessing import MinMaxScaler
+
+array = data1_numeric.values
+
+scaler = MinMaxScaler(feature_range=(0,1))
+rescaledX = scaler.fit_transform(array)
+
+
+set_printoptions(precision=2)
+print(rescaledX[0:10,:])
+
+
+# In[45]:
+
+
+from sklearn.preprocessing import StandardScaler
+
+array = data1_numeric.values
+scaler = StandardScaler()
+rescaledX = scaler.fit_transform(array)
+
+set_printoptions(precision=2)
+print(rescaledX[0:10,:])
+
+
+# In[ ]:
+
+
+
 
