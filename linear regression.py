@@ -145,27 +145,27 @@ plt.xlim([0,1250])
 plt.show()
 
 
-# In[18]:
+# In[17]:
 
 
 #Predict sunday sales for 200 and 300 and 1500 daily circulation
 newdata=pd.Series([200,300,1500])
 
 
-# In[19]:
+# In[18]:
 
 
 data_pred=pd.DataFrame(newdata, columns=['daily'])
 data_pred
 
 
-# In[20]:
+# In[19]:
 
 
 model1.predict(data_pred)
 
 
-# In[21]:
+# In[20]:
 
 
 #predict on alla given training data
@@ -174,14 +174,14 @@ pred = model1.predict(data1["daily"])
 pred
 
 
-# In[27]:
+# In[21]:
 
 
 data1["Y_hat"] = pred
 data1
 
 
-# In[28]:
+# In[22]:
 
 
 # Compute the error values (residuals) and add as another column
@@ -189,7 +189,7 @@ data1["residuals"]= data1["sunday"]-data1["Y_hat"]
 data1
 
 
-# In[29]:
+# In[23]:
 
 
 #compute mean squared error for the model
@@ -199,7 +199,7 @@ print("MSE: ",mse)
 print("RMSE: ",rmse)
 
 
-# In[30]:
+# In[24]:
 
 
 #compute mean absolute error (MAE)
@@ -207,11 +207,41 @@ mae = np.mean(np.abs(data1["daily"]-data1["Y_hat"]))
 mae
 
 
-# In[31]:
+# In[25]:
 
 
 plt.scatter(data1["Y_hat"], data1["residuals"])
 
+
+# checking the model resiuals  of scatter plot and normality
+# 1.check the scatter plot for residuals Vs Y_hat
+# 2.check the  Q-Q plot for residuals distribution
+# 3.check the kde plot for residuals
+
+# Observations:
+# 1.There appears to be no trnd and the residuals are         randomly placed around the zero error line
+# 2.Hence the assupmtion of homoscedasticty(constant           variance in residuals) is satisfied
+
+# In[26]:
+
+
+# Plot the Q-Q plot (to check the normality of residuals)
+import statsmodels.api as sm
+sm.qqplot(data1["residuals"], line='45', fit=True)
+plt.show()
+
+
+# In[28]:
+
+
+# plot the kde distribution for residuals
+sns.histplot(data1["residuals"],kde=True)
+
+
+# Observations:
+# 1.The data points are seen to closely follow the             reference line of normality
+# 2.Hence the residuals are approximately normally             distributr as also can be seen from the kde distribution
+# 3.All the assumptions of simple linear regression are       verified and found to be valid in this case
 
 # In[ ]:
 
