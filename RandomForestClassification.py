@@ -11,7 +11,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import KFold, StratifiedKFold
 
 
-# In[3]:
+# In[2]:
 
 
 dataframe = pd.read_csv("diabetes.csv")
@@ -38,7 +38,7 @@ dataframe
 # 
 # - Outcome	Binary value indicating non-diabetic /diabetic	Factor	[0,1]
 
-# In[6]:
+# In[3]:
 
 
 from sklearn.model_selection import KFold, StratifiedKFold
@@ -56,7 +56,7 @@ print(results)
 print(results.mean())
 
 
-# In[ ]:
+# In[4]:
 
 
 # Use Grid search CV to find best parameters (Hyper parameter tuning) 
@@ -74,6 +74,49 @@ grid_search = GridSearchCV (estimator=rf,
                             cv = 5, 
                             n_jobs=-1, verbose=10, scoring="accuracy") 
 grid_search.fit(X, Y)
+
+
+# In[5]:
+
+
+print(grid_search.best_params_)
+print(grid_search.best_score_)
+
+
+# In[6]:
+
+
+grid_search.best_estimator_
+
+
+# In[10]:
+
+
+model_best = RandomForestClassifier(criterion='entropy', max_depth=5, max_features=None, min_samples_leaf=5, n_jobs=-1, random_state=42)
+model_best.fit(X,Y)
+model_best.feature_importances_
+
+
+# In[13]:
+
+
+X = dataframe.iloc[:,0:8]
+X.columns
+
+
+# In[17]:
+
+
+df = pd.DataFrame(model_best.feature_importances_, columns = ["Importance score"],index = X.columns)
+df.sort_values(by = "Importance score", inplace = True, ascending = False,)
+
+
+# In[19]:
+
+
+import matplotlib.pyplot as plt
+import seaborn as sns 
+plt.bar(df.index, df["Importance score"])
 
 
 # In[ ]:
